@@ -2,10 +2,13 @@ name: Fathom -> Notion sync
 
 on:
   schedule:
-    # Elk uur, op het hele uur (UTC). Pas gerust aan (bv. "0 */2 * * *" voor
-    # elke 2 uur) - LOOKBACK_HOURS in de repo-secrets moet dan wel groter
-    # blijven dan het interval, zodat een gemiste run geen call overslaat.
-    - cron: "0 * * * *"
+    # Een keer per dag, om 05:00 UTC (~7u 's ochtends in Belgie in de zomer,
+    # 6u in de winter). Pas het uur gerust aan naar wanneer het jou best past.
+    # LOOKBACK_HOURS in de repo-secrets moet groter blijven dan dit interval
+    # (24u) zodat een gemiste of trage run nooit een call overslaat - de
+    # default van 26u in config.py voldoet daaraan, maar met maar 2u marge;
+    # overweeg die desgewenst iets ruimer te zetten (bv. 30).
+    - cron: "0 5 * * *"
   workflow_dispatch: {}
     # Hiermee kan je de sync ook handmatig starten vanuit het "Actions"-tabblad
     # op GitHub, bv. om te testen zonder op de cron te wachten.
