@@ -71,7 +71,7 @@ PROPERTY_TYPES = {
         "Meeting naam": "title", "Bedrijf/Klant": "rich_text", "Datum": "date",
         "Deal stage": "select", "Industrie": "rich_text", "Bedrijfsgrootte": "rich_text",
         "Funding stage": "rich_text", "Attendees": "rich_text", "Call outcome": "select",
-        "Transcript link": "url",
+        "Transcript link": "url", "ICP-marktsegment": "select",
     },
     "outcome_reasons": {
         "Beschrijving": "title", "Richting": "select", "Categorie": "select",
