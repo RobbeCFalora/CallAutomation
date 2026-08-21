@@ -44,6 +44,20 @@ Insights, ...) toont Notion automatisch deze titel - dus moet die meteen het bed
 plaats van een onduidelijke of wisselende naam. Ontbreekt company_client (zeldzaam)? Gebruik dan enkel
 de datum.
 
+BELANGRIJK voor het select-veld "ICP-marktsegment": classificeer het bedrijf op basis van
+company_client/industry/company_size in EXACT een van deze 7 opties (letterlijk zo overnemen,
+inclusief nummer):
+- "1. B2B professional services" — juridisch, boekhouding, consulting, recruiting/staffing. Sales-
+  gedreven, vaak owner-run, uurtarief-gedreven.
+- "2. Industrie & productie (direct channel)" — makers/producenten/installateurs die rechtstreeks aan
+  de eindklant leveren, geen tussenhandel; technische buyers.
+- "3. IT-diensten & cybersecurity" — softwareontwikkeling op maat, IT-dienstverlening, managed
+  services, cybersecurity. Sales-gedreven, vaak comité-beslissing.
+- "4. SaaS (lean team)" — een eigen SaaS-product/platform, klein commercieel team.
+- "5. Telecom & logistiek" — telecom- of transport/logistiekbedrijven.
+- "6. Agencies & freelancers" — marketing-/communicatie-/digitale bureaus, freelancers.
+- "Other" — past bij geen van de 6 hierboven. Forceer geen kunstmatige match; bij twijfel "Other".
+
 ## Stap 2 — Categorieën met normalisatie (bestaand vs. nieuw)
 
 Voor Feature Requests / Ideas, Existing Feature Feedback, Client Insights, ICP Signals (op "ICP segment")
