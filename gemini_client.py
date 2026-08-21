@@ -53,15 +53,20 @@ def to_function_declarations(tools: list) -> list:
     ]
 
 
-def call_generate(system: str, contents: list, tools: list = None) -> dict:
+def call_generate(system: str, contents: list, tools: list = None, generation_config: dict = None) -> dict:
     """Eén losse aanroep van de Gemini generateContent API. Geeft de volledige
-    response terug."""
+    response terug. 'generation_config' kan bv. {"responseMimeType": "application/json"}
+    zijn om Gemini te dwingen syntactisch geldige JSON terug te geven (gebruikt
+    door Stage 1, dat geen tools heeft en pure JSON verwacht - dit voorkomt de
+    occasionele "kapotte JSON" die een los taalmodel soms teruggeeft)."""
     body = {
         "system_instruction": {"parts": [{"text": system}]},
         "contents": contents,
     }
     if tools:
         body["tools"] = [{"functionDeclarations": to_function_declarations(tools)}]
+    if generation_config:
+        body["generationConfig"] = generation_config
 
     url = f"{GEMINI_API_URL}/{GEMINI_MODEL}:generateContent"
     r = requests.post(url, headers=HEADERS, json=body, timeout=300)

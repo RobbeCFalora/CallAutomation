@@ -121,16 +121,34 @@ def _parse_json_response(text: str) -> dict:
 
 
 def run_stage1(transcript_text: str, meeting_date: str = "") -> dict:
-    """Stage 1: pure extractie, geen tools. Geeft de geparste JSON terug."""
+    """Stage 1: pure extractie, geen tools. Geeft de geparste JSON terug.
+
+    Vraagt Gemini expliciet om JSON-output (responseMimeType) - dat dwingt
+    syntactisch geldige JSON af en voorkomt de occasionele kapotte JSON die een
+    los taalmodel soms teruggeeft. Als het parsen tóch faalt (zeldzaam), wordt
+    de aanroep één keer opnieuw geprobeerd voor we opgeven - dit gesprek zou
+    anders sowieso overgeslagen worden en pas bij een volgende run opnieuw
+    geprobeerd worden, dus deze retry bespaart gewoon tijd binnen dezelfde run."""
     context = build_context_lists()
     system_prompt = render_stage1_prompt(context)
     user_content = (
         f"Datum van dit gesprek: {meeting_date or 'onbekend'}\n\n"
         f"TRANSCRIPT:\n{transcript_text}"
     )
-    response = llm.call_generate(system_prompt, [{"role": "user", "parts": [{"text": user_content}]}])
-    text = llm.extract_text(response)
-    return _parse_json_response(text)
+    user_parts = [{"role": "user", "parts": [{"text": user_content}]}]
+    generation_config = {"responseMimeType": "application/json"}
+
+    last_error = None
+    for attempt in range(2):
+        response = llm.call_generate(system_prompt, user_parts, generation_config=generation_config)
+        text = llm.extract_text(response)
+        try:
+            return _parse_json_response(text)
+        except json.JSONDecodeError as exc:
+            last_error = exc
+            print(f"[pipeline] Stage 1 gaf geen geldige JSON terug (poging {attempt + 1}/2): {exc} - "
+                  f"{'opnieuw proberen...' if attempt == 0 else 'geef op.'}")
+    raise last_error
 
 
 def run_stage2(stage1_json: dict, meeting_date: str, recording_url: str) -> str:
