@@ -37,6 +37,13 @@ Maak één pagina aan in Meetings met company_client, industry, company_size, fu
 (platte tekst "Naam (rol); Naam (rol)"), meeting_type, deal_stage, en call_outcome.result. Onthou de
 resulterende page-URL: die gebruik je hierna als "Meeting"-relatie op alle andere rijen.
 
+BELANGRIJK voor het titelveld "Meeting naam": zet dit ALTIJD op exact "{company_client} — {datum}"
+(bv. "Optimile — 2026-08-18"), NOOIT op een zelfverzonnen omschrijving van het gesprek. Reden: overal
+waar de "Meeting"-relatie getoond wordt (bv. in Feature Requests, Existing Feature Feedback, Client
+Insights, ...) toont Notion automatisch deze titel - dus moet die meteen het bedrijf laten zien in
+plaats van een onduidelijke of wisselende naam. Ontbreekt company_client (zeldzaam)? Gebruik dan enkel
+de datum.
+
 ## Stap 2 — Categorieën met normalisatie (bestaand vs. nieuw)
 
 Voor Feature Requests / Ideas, Existing Feature Feedback, Client Insights, ICP Signals (op "ICP segment")
