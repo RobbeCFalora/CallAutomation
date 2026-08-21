@@ -13,6 +13,7 @@ Praat rechtstreeks met api.fathom.ai - kan niet vanuit de Claude Cowork-
 sandbox, dit script is bedoeld om buiten Cowork te draaien. Zie README.md.
 """
 import sys
+import time
 from datetime import datetime, timedelta, timezone
 
 import requests
@@ -58,6 +59,30 @@ def _extract_cursor(payload: dict):
     return None
 
 
+def _get_with_retry(url: str, params: dict, max_attempts: int = 6) -> requests.Response:
+    """GET met automatische retry + backoff bij 429 (rate limit) of een 5xx van
+    Fathom. Respecteert een 'Retry-After'-header als Fathom die meegeeft,
+    anders exponentiële backoff (5s, 10s, 20s, ...). Andere fouten (4xx zoals
+    401/403) worden NIET herprobeerd - die lossen zichzelf niet op door te
+    wachten."""
+    delay = 5.0
+    last_response = None
+    for attempt in range(1, max_attempts + 1):
+        r = requests.get(url, headers=HEADERS, params=params, timeout=60)
+        last_response = r
+        if r.status_code != 429 and r.status_code < 500:
+            return r
+        if attempt == max_attempts:
+            return r
+        retry_after = r.headers.get("Retry-After")
+        wait = float(retry_after) if retry_after and retry_after.strip().isdigit() else delay
+        print(f"[fathom_client] Fathom API-fout {r.status_code} (poging {attempt}/{max_attempts}) - "
+              f"{wait:.0f}s wachten en opnieuw proberen...", file=sys.stderr)
+        time.sleep(wait)
+        delay *= 2
+    return last_response
+
+
 def get_recent_meetings(lookback_hours: float = None) -> list:
     """Haalt de meetings van Dylan Van Engeland op die binnen het lookback-venster
     zijn opgenomen, MET transcript. Retourneert een lijst van meeting-dicts
@@ -76,7 +101,7 @@ def get_recent_meetings(lookback_hours: float = None) -> list:
         if cursor:
             params["cursor"] = cursor
 
-        r = requests.get(f"{FATHOM_BASE_URL}/meetings", headers=HEADERS, params=params, timeout=60)
+        r = _get_with_retry(f"{FATHOM_BASE_URL}/meetings", params)
         if r.status_code >= 400:
             raise RuntimeError(f"Fathom API-fout {r.status_code}: {r.text[:2000]}")
         payload = r.json()
