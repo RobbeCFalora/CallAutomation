@@ -1,4 +1,4 @@
-"""Tool-definities die aan Claude (Stage 2, de 'Librarian') worden gegeven, plus de
+"""Tool-definities die aan het LLM (Stage 2, de 'Librarian', draait op Gemini) worden gegeven, plus de
 dispatcher die een tool_use-aanroep effectief tegen Notion uitvoert."""
 import json
 
@@ -13,10 +13,11 @@ TOOLS = [
         "description": (
             "Haal de bestaande rijen van één Falora Call Intelligence-database op, "
             "als compacte {url, ...velden}-objecten. Gebruik dit VOORDAT je iets "
-            "aanmaakt in feature_requests, existing_feature_feedback, icp_signals of "
-            "assumptions, om te checken of er al een gelijkaardige rij bestaat "
-            "(zie Stap 2 van je instructies) - en gebruik dit ook op 'meetings' voor "
-            "de idempotentie-check in Stap 0."
+            "aanmaakt in feature_requests, existing_feature_feedback, client_insights, "
+            "icp_signals of assumptions, om te checken of er al een gelijkaardige rij "
+            "bestaat op basis van het ONDERLIGGENDE THEMA (niet de letterlijke "
+            "bewoording - zie Stap 2 van je instructies) - en gebruik dit ook op "
+            "'meetings' voor de idempotentie-check in Stap 0."
         ),
         "input_schema": {
             "type": "object",
