@@ -1,0 +1,37 @@
+name: Fathom -> Notion sync
+
+on:
+  schedule:
+    # Elk uur, op het hele uur (UTC). Pas gerust aan (bv. "0 */2 * * *" voor
+    # elke 2 uur) - LOOKBACK_HOURS in de repo-secrets moet dan wel groter
+    # blijven dan het interval, zodat een gemiste run geen call overslaat.
+    - cron: "0 * * * *"
+  workflow_dispatch: {}
+    # Hiermee kan je de sync ook handmatig starten vanuit het "Actions"-tabblad
+    # op GitHub, bv. om te testen zonder op de cron te wachten.
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run sync
+        env:
+          FATHOM_API_KEY: ${{ secrets.FATHOM_API_KEY }}
+          FATHOM_RECORDED_BY_EMAIL: ${{ secrets.FATHOM_RECORDED_BY_EMAIL }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: ${{ secrets.GEMINI_MODEL }}
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+          LOOKBACK_HOURS: ${{ secrets.LOOKBACK_HOURS }}
+        run: python sync.py
