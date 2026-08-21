@@ -16,7 +16,12 @@ on:
 jobs:
   sync:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 60
+    # 60 min i.p.v. 20: bij een grote backfill (bv. alle gesprekken van dit jaar)
+    # kunnen er veel meer meetings in één run zitten dan bij de normale dagelijkse
+    # sync, en elk gesprek kost ~1-2 minuten (twee Gemini-aanroepen + Notion-writes).
+    # Voor de normale dagelijkse cron-run maakt dit niets uit (die duurt sowieso
+    # veel korter), dus dit mag gerust zo blijven staan.
     steps:
       - name: Checkout
         uses: actions/checkout@v4
