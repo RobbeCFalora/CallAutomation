@@ -83,6 +83,14 @@ losse rijen.
     dezelfde rij.
   - Andere velden bijwerken als de nieuwe info sterker/recenter is (bv. "Vraagsterkte" naar High als dit
     gesprek het sterker maakt, "Status op dit moment" bij Assumptions).
+  - BELANGRIJK bij Existing Feature Feedback specifiek: overschrijf "Sentiment" NOOIT zomaar met de
+    sentiment van het nieuwste gesprek alleen. Weeg het af tegen wat er al in "Onderbouwing" staat: als
+    de meerderheid van de eerdere klanten positief was (Loved/Liked) en deze ene nieuwe klant negatief is
+    (of omgekeerd), blijft het huidige Sentiment staan (voeg het afwijkende geval toe als nuance in
+    Onderbouwing, bv. "— Bij [Bedrijf]: in tegenstelling tot andere klanten, ..."). Wijzig Sentiment enkel
+    als de nieuwe meerderheid écht kantelt. Reden: dit veld is één enkele waarde voor de hele rij, dus een
+    kille meerderheidsregel voorkomt dat één recent negatief (of positief) gesprek het totaalbeeld verkeerd
+    laat overkomen.
 - Geen match? Maak een nieuwe rij aan.
 
 Voor Assumptions specifiek: als er een match is, maak GEEN nieuwe Assumption-rij — maak wel altijd een
